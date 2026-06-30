@@ -2,17 +2,17 @@
 
 A playable Snake game running inside a PDF file.
 
-Works best in Chrome desktop PDF viewer. No canvas. No HTML game engine. Just AcroForm fields, embedded JavaScript, and a 20×20 text grid.
+No canvas. No HTML game engine. Just AcroForm fields, embedded JavaScript, and a cursed 20×20 text grid.
+
+Works best in Chrome desktop PDF viewer.
+
+Open `generated/playable-pdf-snake.pdf` in Chrome desktop, click START, then use the on-PDF direction buttons to play.
 
 ## Demo
 
 Demo GIF coming soon.
 
 The demo GIF will live at `docs/assets/pdf-snake-demo.gif`. Until it is recorded, see `docs/assets/README.md` for the short capture recipe.
-
-## Open the Playable PDF
-
-Open `generated/playable-pdf-snake.pdf` in Chrome desktop, click START, then use the on-PDF direction buttons to play.
 
 ## Install
 
