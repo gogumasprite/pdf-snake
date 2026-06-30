@@ -69,7 +69,7 @@ The Snake logic uses one `GRID_SIZE = 20` constant for cell generation, movement
 
 The START, direction, and difficulty controls are AcroForm buttons. Each button runs a small JavaScript action inside the PDF. START initializes or restarts the game, the direction buttons update the pending snake direction, and SLOW/NORMAL/FAST change the timer interval.
 
-The game loop uses PDF JavaScript's `app.setInterval` to move the snake, place food, update the score, detect collisions, and rewrite cell values. On collision, the game stops the movement timer, runs a short death animation that alternates normal snake text with `x` cells, then clears the board and writes GAME / OVER inside the 20 by 20 grid. The public UI intentionally omits a Status field to keep the controls simple.
+The game loop uses PDF JavaScript's `app.setInterval` to move the snake, place food, update the score, detect collisions, and rewrite cell values. On collision, the game stops the movement timer, runs a short death animation that alternates normal snake text with `x` cells, then clears the board and writes GAME / OVER inside the 20 by 20 grid. If the snake fills the entire 20 by 20 board, the game clears the timer and writes CLEAR inside the grid. The public UI intentionally omits a Status field to keep the controls simple.
 
 For a non-technical walkthrough, see `docs/how-it-works.md`.
 

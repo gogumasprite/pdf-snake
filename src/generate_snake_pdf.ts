@@ -580,7 +580,16 @@ async function main(): Promise<void> {
       throw new Error(`Missing generated ${SPIKE_CELL_TEXT_FILE}`);
     }
     const finalSnakeScript = buildSnakeStartScript();
-    const requiredRendererSnippets = ["'@'", "'O'", "'X'", "'x'", "'GAME'", "'OVER'"];
+    const requiredRendererSnippets = [
+      "'@'",
+      "'O'",
+      "'X'",
+      "'x'",
+      "'GAME'",
+      "'OVER'",
+      "'CLEAR'",
+      'emptyCells',
+    ];
     for (const snippet of requiredRendererSnippets) {
       if (!finalSnakeScript.includes(snippet)) {
         throw new Error(`Missing final renderer snippet: ${snippet}`);
@@ -596,6 +605,12 @@ async function main(): Promise<void> {
     for (const snippet of forbiddenHeadSnippets) {
       if (finalSnakeScript.includes(snippet)) {
         throw new Error(`Forbidden directional head renderer snippet: ${snippet}`);
+      }
+    }
+    const forbiddenFoodSpawnSnippets = ['while (', 'while('];
+    for (const snippet of forbiddenFoodSpawnSnippets) {
+      if (finalSnakeScript.includes(snippet)) {
+        throw new Error(`Forbidden food spawn loop snippet: ${snippet}`);
       }
     }
     console.log(`Verified ${requiredFields.length} required fields.`);

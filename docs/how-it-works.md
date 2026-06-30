@@ -100,13 +100,15 @@ The game also blocks immediate reverse turns. If the snake is moving right, pres
 
 `generated/spike5_cell_text.pdf` is the replacement debug spike. It has the same kind of cell fields as the public game. Pressing its button cycles the center cell through empty, `O`, and `X`. If that spike is visible in Chrome, the final Snake renderer should also be visible.
 
-## Ready and Game Over Screens
+## Ready, Game Over, and Clear Screens
 
 Before the game starts, the grid starts with empty cell values.
 
 When the snake hits a wall or its own body, the movement timer stops and the game enters a DYING state. Direction input is ignored during this state. The board blinks for a few frames by alternating the normal snake (`O O O @`) with a dead snake (`x x x x`). After the blink, the game enters GAME_OVER and writes GAME / OVER directly into the 20 by 20 grid. The Score field keeps the final score, and the Difficulty field keeps the selected difficulty.
 
-Pressing START clears both the movement timer and the death-animation timer before starting a fresh game. This prevents duplicate intervals from stacking up after repeated restarts.
+If the snake fills all 400 cells of the 20 by 20 board, the game enters CLEAR instead. CLEAR is the board-completion ending, while GAME OVER is the collision ending. The game stops the movement timer, does not spawn another food item, clears the cell values, and writes CLEAR directly into the grid. The Score field keeps the final score, and the Difficulty field keeps the selected difficulty.
+
+Pressing START clears both the movement timer and the death-animation timer before starting a fresh game. This works from READY, RUNNING, DYING, GAME_OVER, and CLEAR, and prevents duplicate intervals from stacking up after repeated restarts.
 
 ## Difficulty Buttons
 
@@ -130,9 +132,12 @@ PDF Snake does the same thing with PDF JavaScript:
 2. `app.setInterval` calls the game tick repeatedly.
 3. Each tick moves the snake one cell.
 4. The script checks for food, wall collisions, and self collisions.
-5. The cell fields, score field, and difficulty field are updated.
+5. If food is eaten, the script grows the snake and checks whether the board is completely full.
+6. The cell fields, score field, and difficulty field are updated.
 
 So the PDF is still a document, but the form fields act like a tiny text-grid display.
+
+Food placement is based on a list of empty cells. The script scans the 20 by 20 grid, collects every cell not occupied by the snake, and randomly chooses one of those cells. If the list is empty, the game does not enter a retry loop; it treats the board as complete and shows CLEAR.
 
 ## Why Chrome Desktop PDF Viewer
 

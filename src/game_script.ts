@@ -1,4 +1,5 @@
 import {
+  CELL_COUNT,
   DEATH_ANIMATION_FRAME_COUNT,
   DEATH_ANIMATION_FRAME_MS,
   FAST_TICK_MS,
@@ -121,7 +122,7 @@ if (typeof snakeGameReady === 'undefined') {
     field.value = value;
   }
 
-  function clearBoard() {
+  function clearCells() {
     snakeMissingCell = '';
     for (var row = 0; row < ${GRID_SIZE}; row += 1) {
       for (var col = 0; col < ${GRID_SIZE}; col += 1) {
@@ -133,7 +134,7 @@ if (typeof snakeGameReady === 'undefined') {
   function drawReadyScreen() {
     snakeState = 'READY';
     snakeRunning = false;
-    clearBoard();
+    clearCells();
     setStatus('Press START to play');
   }
 
@@ -203,13 +204,14 @@ if (typeof snakeGameReady === 'undefined') {
     }
     if (emptyCells.length === 0) {
       snakeFood = {row: -1, col: -1};
-      return;
+      return false;
     }
     snakeFood = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    return true;
   }
 
   function renderBoard() {
-    clearBoard();
+    clearCells();
     if (snakeFood.row >= 0 && snakeFood.col >= 0) {
       setCellValue(snakeFood.row, snakeFood.col, 'X');
     }
@@ -225,7 +227,7 @@ if (typeof snakeGameReady === 'undefined') {
   }
 
   function renderDeadSnakeFrame(showDead) {
-    clearBoard();
+    clearCells();
     var glyph = showDead ? 'x' : 'O';
     for (var index = 1; index < snakeBody.length; index += 1) {
       setCellValue(snakeBody[index].row, snakeBody[index].col, glyph);
@@ -245,11 +247,27 @@ if (typeof snakeGameReady === 'undefined') {
   }
 
   function renderGameOverText() {
-    clearBoard();
+    clearCells();
     renderCenteredWord(8, 'GAME');
     renderCenteredWord(10, 'OVER');
     setField('score', snakeScore);
     reportMissingCell();
+  }
+
+  function renderClearText() {
+    clearCells();
+    renderCenteredWord(9, 'CLEAR');
+    setField('score', snakeScore);
+    setDifficultyField();
+    reportMissingCell();
+  }
+
+  function handleClear() {
+    clearAllTimers();
+    snakeState = 'CLEAR';
+    snakeRunning = false;
+    snakeFood = {row: -1, col: -1};
+    renderClearText();
   }
 
   function startSnake() {
@@ -266,7 +284,10 @@ if (typeof snakeGameReady === 'undefined') {
     snakeState = 'RUNNING';
     snakeRunning = true;
     deathAnimationFrame = 0;
-    placeFood();
+    if (!placeFood()) {
+      handleClear();
+      return;
+    }
     setStatus('Running');
     renderBoard();
     scheduleSnakeTick();
@@ -337,7 +358,14 @@ if (typeof snakeGameReady === 'undefined') {
     snakeBody.unshift(nextHead);
     if (nextHead.row === snakeFood.row && nextHead.col === snakeFood.col) {
       snakeScore += 1;
-      placeFood();
+      if (snakeBody.length === ${CELL_COUNT}) {
+        handleClear();
+        return;
+      }
+      if (!placeFood()) {
+        handleClear();
+        return;
+      }
     } else {
       snakeBody.pop();
     }
