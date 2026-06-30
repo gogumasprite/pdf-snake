@@ -10,9 +10,7 @@ Open `generated/playable-pdf-snake.pdf` in Chrome desktop, click START, then use
 
 ## Demo
 
-Demo GIF coming soon.
-
-The demo GIF will live at `docs/assets/pdf-snake-demo.gif`. Until it is recorded, see `docs/assets/README.md` for the short capture recipe.
+![PDF Snake demo](docs/assets/pdf-snake-demo.gif)
 
 ## Install
 
